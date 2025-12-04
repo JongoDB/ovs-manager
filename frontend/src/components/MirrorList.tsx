@@ -1,4 +1,21 @@
 import React, { useState } from 'react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  Typography,
+  Box,
+  Collapse,
+  Alert,
+  CircularProgress,
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import BarChartIcon from '@mui/icons-material/BarChart';
 import { mirrorsApi } from '../services/api';
 import { Mirror } from '../types';
 
@@ -59,83 +76,103 @@ const MirrorList: React.FC<MirrorListProps> = ({ hostId, mirrors, onDelete }) =>
   };
 
   if (mirrors.length === 0) {
-    return <p>No mirrors configured.</p>;
+    return (
+      <Typography variant="body2" color="text.secondary">
+        No mirrors configured.
+      </Typography>
+    );
   }
 
   return (
-    <div>
-      {error && <div className="error">{error}</div>}
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Bridge</th>
-            <th>Source Port</th>
-            <th>Output Port</th>
-            <th>UUID</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {mirrors.map(mirror => (
-            <React.Fragment key={mirror.uuid}>
-              <tr>
-                <td>{mirror.name || 'Unnamed'}</td>
-                <td>{mirror.bridge}</td>
-                <td>{mirror.select_src_port?.join(', ') || (mirror.select_src_port === null ? 'All (dynamic)' : '-')}</td>
-                <td>{mirror.output_port || '-'}</td>
-                <td>
-                  <code style={{ fontSize: '0.85rem' }}>{mirror.uuid}</code>
-                </td>
-                <td>
-                  <button
-                    className="button"
-                    onClick={() => handleViewStatistics(mirror)}
-                    disabled={loadingStats === mirror.uuid}
-                    style={{ marginRight: '0.5rem' }}
-                  >
-                    {loadingStats === mirror.uuid 
-                      ? 'Loading...' 
-                      : stats[mirror.uuid] 
-                        ? 'Hide Stats' 
-                        : 'View Stats'}
-                  </button>
-                  <button
-                    className="button button-danger"
-                    onClick={() => handleDelete(mirror)}
-                    disabled={deleting === mirror.uuid}
-                  >
-                    {deleting === mirror.uuid ? 'Deleting...' : 'Delete'}
-                  </button>
-                </td>
-              </tr>
-              {stats[mirror.uuid] && (
-                <tr>
-                  <td colSpan={6} style={{ backgroundColor: '#f8f9fa', padding: '1rem' }}>
-                    <div>
-                      <strong>Statistics:</strong>
-                      <pre style={{ 
-                        marginTop: '0.5rem', 
-                        padding: '0.5rem', 
-                        backgroundColor: '#fff', 
-                        border: '1px solid #ddd',
-                        borderRadius: '4px',
-                        fontSize: '0.85rem',
-                        overflow: 'auto'
-                      }}>
-                        {JSON.stringify(stats[mirror.uuid], null, 2)}
-                      </pre>
-                    </div>
-                  </td>
-                </tr>
-              )}
-            </React.Fragment>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Box>
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
+      <TableContainer component={Paper}>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Bridge</TableCell>
+              <TableCell>Source Port</TableCell>
+              <TableCell>Output Port</TableCell>
+              <TableCell>UUID</TableCell>
+              <TableCell align="right">Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {mirrors.map(mirror => (
+              <React.Fragment key={mirror.uuid}>
+                <TableRow>
+                  <TableCell>{mirror.name || 'Unnamed'}</TableCell>
+                  <TableCell>{mirror.bridge}</TableCell>
+                  <TableCell>
+                    {mirror.select_src_port?.join(', ') || (mirror.select_src_port === null ? 'All (dynamic)' : '-')}
+                  </TableCell>
+                  <TableCell>{mirror.output_port || '-'}</TableCell>
+                  <TableCell>
+                    <Typography variant="body2" fontFamily="monospace" fontSize="0.85rem">
+                      {mirror.uuid}
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="right">
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      startIcon={loadingStats === mirror.uuid ? <CircularProgress size={16} /> : <BarChartIcon />}
+                      onClick={() => handleViewStatistics(mirror)}
+                      disabled={loadingStats === mirror.uuid}
+                      sx={{ mr: 1 }}
+                    >
+                      {stats[mirror.uuid] ? 'Hide Stats' : 'View Stats'}
+                    </Button>
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      color="error"
+                      startIcon={deleting === mirror.uuid ? <CircularProgress size={16} /> : <DeleteIcon />}
+                      onClick={() => handleDelete(mirror)}
+                      disabled={deleting === mirror.uuid}
+                    >
+                      Delete
+                    </Button>
+                  </TableCell>
+                </TableRow>
+                {stats[mirror.uuid] && (
+                  <TableRow>
+                    <TableCell colSpan={6} sx={{ py: 0 }}>
+                      <Collapse in={true}>
+                        <Box sx={{ p: 2, bgcolor: 'grey.50' }}>
+                          <Typography variant="subtitle2" gutterBottom>
+                            <strong>Statistics:</strong>
+                          </Typography>
+                          <Paper
+                            variant="outlined"
+                            sx={{
+                              p: 1,
+                              bgcolor: 'background.paper',
+                              fontFamily: 'monospace',
+                              fontSize: '0.85rem',
+                              overflow: 'auto',
+                              whiteSpace: 'pre',
+                            }}
+                          >
+                            {JSON.stringify(stats[mirror.uuid], null, 2)}
+                          </Paper>
+                        </Box>
+                      </Collapse>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </React.Fragment>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   );
 };
 
 export default MirrorList;
-

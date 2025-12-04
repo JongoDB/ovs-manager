@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Button, CircularProgress, Alert } from '@mui/material';
+import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import { Bridge, Mirror, VM, Container } from '../types';
 import { PortMapping, mirrorsApi } from '../services/api';
 import { findVMForPort } from '../utils/vmMapping';
@@ -106,17 +108,23 @@ const BridgeVisualization: React.FC<BridgeVisualizationProps> = ({
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <h3 style={{ margin: 0 }}>{bridge.name}</h3>
               {bridgeMirrors.length > 0 && (
-                <button
-                  className="button button-danger"
+                <Button
+                  variant="outlined"
+                  color="error"
+                  size="small"
+                  startIcon={clearing === bridge.name ? <CircularProgress size={16} /> : <DeleteSweepIcon />}
                   onClick={() => handleClearMirrors(bridge.name)}
                   disabled={clearing === bridge.name}
-                  style={{ fontSize: '0.85rem', padding: '0.4rem 0.8rem' }}
                 >
-                  {clearing === bridge.name ? 'Clearing...' : 'Clear All Mirrors'}
-                </button>
+                  Clear All Mirrors
+                </Button>
               )}
             </div>
-            {error && <div className="error" style={{ marginBottom: '1rem' }}>{error}</div>}
+            {error && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {error}
+              </Alert>
+            )}
             <div className="bridge-info">
               <div className="info-item">
                 <strong>UUID:</strong> {bridge.uuid}

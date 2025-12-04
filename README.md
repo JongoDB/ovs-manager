@@ -2,7 +2,7 @@
 
 A modern web application for managing Open vSwitch (OVS) bridges, mirrors, ports, and VMs across multiple Proxmox hosts.
 
-![Dashboard Screenshot](docs/images/dashboard.png)
+![OVS Manager Logo](docs/images/logo.png)
 
 ## Features
 
@@ -90,7 +90,7 @@ The images are automatically pulled from:
 
 ### Dashboard
 
-![Dashboard Overview](docs/images/dashboard-overview.png)
+![Dashboard Overview](docs/images/dashboard.png)
 
 The Dashboard provides a high-level overview of your OVS infrastructure:
 
@@ -113,7 +113,7 @@ The Dashboard provides a high-level overview of your OVS infrastructure:
 
 ### Host Detail View
 
-![Host Detail](docs/images/host-detail.png)
+![Host Detail](docs/images/host-details.png)
 
 Access detailed information about a specific Proxmox host:
 
@@ -143,7 +143,7 @@ Access detailed information about a specific Proxmox host:
 
 ### Bridge Management
 
-![Bridge Management](docs/images/bridge-management.png)
+![Bridge Management](docs/images/bridges.png)
 
 Comprehensive bridge configuration and management interface:
 
@@ -165,7 +165,7 @@ Comprehensive bridge configuration and management interface:
 
 **Configured Devices Table:**
 
-![Bridge Devices Table](docs/images/bridge-devices-table.png)
+![Bridge Devices Table](docs/images/bridges-expanded.png)
 
 Shows **all** VMs and containers configured for each bridge with columns:
 - **Type**: VM (green) or CT/Container (orange)
@@ -193,7 +193,7 @@ Shows **all** VMs and containers configured for each bridge with columns:
 
 ### Port Management
 
-![Port Management](docs/images/port-management.png)
+![Port Management](docs/images/ports.png)
 
 View and configure individual OVS ports:
 
@@ -225,7 +225,7 @@ View and configure individual OVS ports:
 
 ### Mirror Management
 
-![Mirror Management](docs/images/mirror-management.png)
+![Mirror Management](docs/images/mirrors.png)
 
 Create and manage port mirrors for traffic monitoring and analysis:
 
@@ -268,7 +268,7 @@ Port mirroring (also called SPAN - Switched Port Analyzer) copies traffic from o
 
 ### Network Topology
 
-![Network Topology](docs/images/network-topology.png)
+![Network Topology](docs/images/net-topology.png)
 
 Interactive visual representation of your OVS network:
 
@@ -308,7 +308,7 @@ Interactive visual representation of your OVS network:
 
 ### Statistics Dashboard
 
-![Statistics Dashboard](docs/images/statistics-dashboard.png)
+![Statistics Dashboard](docs/images/net-stats.png)
 
 Real-time monitoring and performance metrics:
 
@@ -340,7 +340,7 @@ Real-time monitoring and performance metrics:
 
 ### Flow Export Configuration
 
-![Flow Export Config](docs/images/flow-export.png)
+![Flow Export Config](docs/images/flows.png)
 
 Configure NetFlow, sFlow, and IPFIX exporters for traffic analysis:
 
@@ -373,7 +373,7 @@ Flow export protocols send network traffic metadata to collectors for analysis:
 
 ### Diagnostics
 
-![Diagnostics](docs/images/diagnostics.png)
+![Diagnostics](docs/images/net-diag.png)
 
 Built-in troubleshooting and testing tools:
 

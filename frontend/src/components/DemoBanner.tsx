@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Alert, AlertTitle, Link } from '@mui/material';
-import InfoIcon from '@mui/icons-material/Info';
+import WarningIcon from '@mui/icons-material/Warning';
 
 const DemoBanner: React.FC = () => {
   const isDemoMode = process.env.REACT_APP_DEMO_MODE === 'true';
@@ -10,10 +10,10 @@ const DemoBanner: React.FC = () => {
   }
 
   return (
-    <Box sx={{ width: '100%', position: 'fixed', top: 0, left: 0, zIndex: 9999 }}>
+    <Box sx={{ width: '100%', position: 'relative', zIndex: 9999 }}>
       <Alert
-        severity="info"
-        icon={<InfoIcon fontSize="inherit" />}
+        severity="warning"
+        icon={<WarningIcon fontSize="inherit" />}
         sx={{
           borderRadius: 0,
           '& .MuiAlert-message': {
@@ -23,13 +23,13 @@ const DemoBanner: React.FC = () => {
         }}
       >
         <AlertTitle sx={{ mb: 0 }}>
-          <strong>Live Demo</strong> - This is a demonstration with sample data showcasing OVS Manager functionality.
+          <strong>Demo Mode</strong> - Limited functionality: This demo uses mock data and is not connected to a live Proxmox instance. Some operations may not function as intended.
           {' '}
           <Link
-            href="https://github.com/JongoDB/ovs-manager"
+            href="https://github.com/jongodb/ovs-manager"
             target="_blank"
             rel="noopener noreferrer"
-            sx={{ color: 'inherit', textDecoration: 'underline' }}
+            sx={{ color: 'inherit', textDecoration: 'underline', fontWeight: 'bold' }}
           >
             Deploy your own instance →
           </Link>
