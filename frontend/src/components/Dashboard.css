@@ -1,0 +1,41 @@
+.dashboard {
+  width: 100%;
+}
+
+.host-card {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: box-shadow 0.2s;
+}
+
+.host-card:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.host-info {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+}
+
+.host-description {
+  color: #888;
+  font-size: 0.85rem;
+  margin: 0.5rem 0;
+}
+
+.error-text {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin: 0.5rem 0;
+}
+
+.button-link {
+  display: inline-block;
+  margin-top: 1rem;
+  text-decoration: none;
+  text-align: center;
+}
+

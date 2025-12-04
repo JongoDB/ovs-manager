@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ovs-manager-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - ovs-cache:/app/cache
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DATABASE_URL=sqlite:///./cache/ovs_manager.db
+    networks:
+      - ovs-manager-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: production  # Use 'development' for hot-reload dev mode
+    container_name: ovs-manager-frontend
+    ports:
+      - "3000:3000"
+    # Production mode: no volumes needed (faster startup)
+    # For development mode: uncomment volumes below and set target to 'development'
+    # volumes:
+    #   - ./frontend:/app
+    #   - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - ESLINT_NO_DEV_ERRORS=true
+      - TSC_COMPILE_ON_ERROR=true
+    networks:
+      - ovs-manager-network
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  ovs-cache:
+
+networks:
+  ovs-manager-network:
+    driver: bridge
+
