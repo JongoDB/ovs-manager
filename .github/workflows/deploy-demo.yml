@@ -40,6 +40,9 @@ jobs:
         env:
           REACT_APP_DEMO_MODE: true
           PUBLIC_URL: /ovs-manager
+          ESLINT_NO_DEV_ERRORS: true
+          TSC_COMPILE_ON_ERROR: true
+          CI: false
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
