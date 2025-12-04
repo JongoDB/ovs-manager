@@ -33,9 +33,25 @@ A modern web application for managing Open vSwitch (OVS) bridges, mirrors, ports
 
 ### Setup Steps
 
-1. **Start Services**:
+#### Option 1: Using Pre-built Images (Recommended)
+
+Pre-built Docker images are automatically published to GitHub Container Registry:
+
+1. **Pull and Start Services**:
    ```bash
-   docker-compose up -d
+   docker compose pull
+   docker compose up -d
+   ```
+
+The images are automatically pulled from:
+- `ghcr.io/jongodb/ovs-manager-backend:latest`
+- `ghcr.io/jongodb/ovs-manager-frontend:latest`
+
+#### Option 2: Building from Source
+
+1. **Build and Start Services**:
+   ```bash
+   docker compose up -d --build
    ```
 
 2. **Access Application**:
@@ -530,6 +546,72 @@ The API provides programmatic access to all OVS Manager features including:
 - VM and container information
 - Flow export configuration
 - Statistics and diagnostics
+
+---
+
+## Docker Images
+
+### Pre-built Images
+
+OVS Manager provides pre-built Docker images via GitHub Container Registry (GHCR):
+
+**Latest stable release:**
+```bash
+docker pull ghcr.io/jongodb/ovs-manager-backend:latest
+docker pull ghcr.io/jongodb/ovs-manager-frontend:latest
+```
+
+**Specific versions:**
+```bash
+docker pull ghcr.io/jongodb/ovs-manager-backend:v0.1.0
+docker pull ghcr.io/jongodb/ovs-manager-frontend:v0.1.0
+```
+
+### Automated Builds
+
+Images are automatically built and published when:
+- Code is pushed to the `main` branch (tagged as `latest`)
+- Version tags are created (e.g., `v1.0.0`, tagged with semantic version)
+
+The build process:
+1. Builds both frontend and backend images
+2. Runs multi-stage builds for optimized image sizes
+3. Uses Docker layer caching for faster builds
+4. Publishes to GHCR with automatic tagging
+
+**Build Status:** Check the [Actions tab](https://github.com/JongoDB/OVS-Manager/actions) for build status
+
+### Image Details
+
+**Backend Image:**
+- Base: Python 3.11 slim
+- Size: ~200MB
+- Contains: FastAPI, SQLAlchemy, SSH clients, OVS tools
+
+**Frontend Image:**
+- Base: Node 18 Alpine
+- Size: ~150MB (production)
+- Contains: Pre-built React app served with `serve`
+- Multi-stage build for minimal production size
+
+### Using Custom Images
+
+To use your own registry or build custom images:
+
+```yaml
+# docker-compose.yml
+services:
+  backend:
+    image: your-registry.com/ovs-manager-backend:custom-tag
+    build:
+      context: ./backend
+
+  frontend:
+    image: your-registry.com/ovs-manager-frontend:custom-tag
+    build:
+      context: ./frontend
+      target: production
+```
 
 ---
 
