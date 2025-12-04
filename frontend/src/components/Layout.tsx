@@ -30,6 +30,7 @@ import {
 } from '@mui/icons-material';
 import { useTheme as useAppTheme } from '../contexts/ThemeContext';
 import { APP_VERSION } from '../version';
+import logo from '../assets/logo.png';
 
 const drawerWidth = 240;
 
@@ -96,7 +97,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </ListItem>
         ))}
       </List>
-      <Box sx={{ p: 2, textAlign: 'center' }}>
+      <Box sx={{ p: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+        <img src={logo} alt="OVS Manager Logo" style={{ width: 24, height: 24 }} />
         <Typography variant="caption" color="text.secondary">
           v{APP_VERSION}
         </Typography>
