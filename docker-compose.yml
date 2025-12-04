@@ -10,8 +10,6 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      # Production mode: only cache volume (no source code mount)
-      # For development mode: use docker-compose.dev.yml instead
       - ovs-cache:/app/cache
     environment:
       - PYTHONUNBUFFERED=1
@@ -25,15 +23,10 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-      target: production  # Use 'development' for hot-reload dev mode
+      target: production
     container_name: ovs-manager-frontend
     ports:
       - "3000:3000"
-    # Production mode: no volumes needed (faster startup)
-    # For development mode: uncomment volumes below and set target to 'development'
-    # volumes:
-    #   - ./frontend:/app
-    #   - /app/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true
       - ESLINT_NO_DEV_ERRORS=true
