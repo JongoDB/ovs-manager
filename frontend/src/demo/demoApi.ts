@@ -179,6 +179,28 @@ export const demoStatisticsApi = {
     await delay();
     return mockData.statistics[hostId as keyof typeof mockData.statistics] || {};
   },
+
+  getAll: async (hostId: string): Promise<any> => {
+    await delay();
+    return mockData.statistics[hostId as keyof typeof mockData.statistics] || {};
+  },
+
+  getInterface: async (hostId: string, interfaceName: string): Promise<any> => {
+    await delay();
+    const stats = mockData.statistics[hostId as keyof typeof mockData.statistics] || {};
+    return stats[interfaceName] || {};
+  },
+
+  getDelta: async (hostId: string): Promise<any> => {
+    await delay();
+    // Return empty delta stats for demo
+    return {};
+  },
+
+  resetBaseline: async (hostId: string): Promise<any> => {
+    await delay();
+    return { message: 'Baseline reset in demo mode', interfaces: [] };
+  },
 };
 
 export const demoDiagnosticsApi = {

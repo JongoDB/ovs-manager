@@ -619,7 +619,7 @@ const exportedFlowExportApi = IS_DEMO_MODE ? demoApis.demoFlowExportApi : flowEx
 const exportedRefreshApi = IS_DEMO_MODE ? demoRefreshApi : refreshApi;
 const exportedCacheApi = IS_DEMO_MODE ? demoCacheApi : cacheApi;
 const exportedPortMappingsApi = IS_DEMO_MODE ? demoPortMappingsApi : portMappingsApi;
-const exportedPortsApi = IS_DEMO_MODE ? { ...portsApi } : portsApi;
+const exportedPortsApi = IS_DEMO_MODE ? demoApis.demoPortsApi : portsApi;
 const exportedVmNetworkApi = IS_DEMO_MODE ? demoVmNetworkApi : vmNetworkApi;
 
 // Export with original API names
