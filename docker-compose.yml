@@ -10,7 +10,8 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./backend:/app
+      # Production mode: only cache volume (no source code mount)
+      # For development mode: use docker-compose.dev.yml instead
       - ovs-cache:/app/cache
     environment:
       - PYTHONUNBUFFERED=1
