@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Host, HostStatus, Bridge, BridgeDetail, Mirror, VM, Container } from '../types';
+import * as demoApis from '../demo/demoApi';
 
 // Demo mode check
 const IS_DEMO_MODE = process.env.REACT_APP_DEMO_MODE === 'true';
@@ -52,7 +53,7 @@ export interface UpdateHostRequest {
   description?: string;
 }
 
-export const hostsApi = {
+const hostsApi = {
   list: async (): Promise<Host[]> => {
     const response = await api.get<Host[]>('/api/hosts');
     return response.data;
@@ -89,7 +90,7 @@ export const hostsApi = {
   },
 };
 
-export const bridgesApi = {
+const bridgesApi = {
   list: async (hostId: string): Promise<Bridge[]> => {
     const response = await api.get<Bridge[]>(`/api/hosts/${hostId}/bridges`);
     return response.data;
@@ -144,7 +145,7 @@ export const bridgesApi = {
   },
 };
 
-export const mirrorsApi = {
+const mirrorsApi = {
   list: async (hostId: string): Promise<Mirror[]> => {
     const response = await api.get<Mirror[]>(`/api/hosts/${hostId}/mirrors`);
     return response.data;
@@ -182,21 +183,21 @@ export const mirrorsApi = {
   },
 };
 
-export const vmsApi = {
+const vmsApi = {
   list: async (hostId: string): Promise<VM[]> => {
     const response = await api.get<VM[]>(`/api/hosts/${hostId}/vms`);
     return response.data;
   },
 };
 
-export const containersApi = {
+const containersApi = {
   list: async (hostId: string): Promise<Container[]> => {
     const response = await api.get<Container[]>(`/api/hosts/${hostId}/containers`);
     return response.data;
   },
 };
 
-export const refreshApi = {
+const refreshApi = {
   refresh: async (hostId: string): Promise<{
     status: string;
     message: string;
@@ -211,7 +212,7 @@ export const refreshApi = {
   },
 };
 
-export const cacheApi = {
+const cacheApi = {
   refreshBridges: async (hostId: string): Promise<{ status: string; message: string; count: number }> => {
     const response = await api.post(`/api/hosts/${hostId}/cache/bridges/refresh`);
     return response.data;
@@ -258,7 +259,7 @@ export interface PortMapping {
   }>;
 }
 
-export const portMappingsApi = {
+const portMappingsApi = {
   get: async (hostId: string): Promise<PortMapping> => {
     const response = await api.get<PortMapping>(`/api/hosts/${hostId}/port-mappings`);
     return response.data;
@@ -293,7 +294,7 @@ export interface StatsDelta {
   tx_errors_ps: number;
 }
 
-export const statisticsApi = {
+const statisticsApi = {
   getAll: async (hostId: string): Promise<Record<string, InterfaceStats>> => {
     const response = await api.get(`/api/hosts/${hostId}/statistics/interfaces`);
     return response.data;
@@ -334,7 +335,7 @@ export interface PortDetail {
   }>;
 }
 
-export const portsApi = {
+const portsApi = {
   create: async (hostId: string, bridgeName: string, data: {
     name: string;
     port_type: string;
@@ -374,7 +375,7 @@ export const portsApi = {
   },
 };
 
-export const flowExportApi = {
+const flowExportApi = {
   // NetFlow
   configureNetflow: async (hostId: string, bridgeName: string, data: {
     targets: string[];
@@ -442,7 +443,7 @@ export interface PacketTraceRequest {
   nw_proto?: string;
 }
 
-export const diagnosticsApi = {
+const diagnosticsApi = {
   // Bridge Inspection
   getOvsTopology: async (hostId: string): Promise<DiagnosticResponse> => {
     const response = await api.get(`/api/hosts/${hostId}/diagnostics/ovs-topology`);
@@ -537,7 +538,7 @@ export const diagnosticsApi = {
 
 
 // VM/Container Network Device Management
-export const vmNetworkApi = {
+const vmNetworkApi = {
   addVMNetworkDevice: async (hostId: string, vmid: number, request: {
     bridge: string;
     model?: string;
@@ -581,51 +582,59 @@ export const vmNetworkApi = {
   },
 };
 
-// Demo mode wrapper - conditionally export demo APIs if in demo mode
-if (IS_DEMO_MODE) {
-  const {
-    demoHostsApi,
-    demoBridgesApi,
-    demoMirrorsApi,
-    demoVmsApi,
-    demoContainersApi,
-    demoPortsApi,
-    demoStatisticsApi,
-    demoDiagnosticsApi,
-    demoFlowExportApi,
-  } = require('../demo/demoApi');
+// Define stub APIs for demo mode
+const demoRefreshApi = {
+  refresh: async () => ({ status: 'success', message: 'Demo mode', bridges_count: 2, mirrors_count: 1, vms_count: 5 }),
+};
 
-  // Override exports with demo APIs
-  Object.assign(module.exports, {
-    hostsApi: demoHostsApi,
-    bridgesApi: demoBridgesApi,
-    mirrorsApi: demoMirrorsApi,
-    vmsApi: demoVmsApi,
-    containersApi: demoContainersApi,
-    portsApi: { ...portsApi, ...demoPortsApi },
-    statisticsApi: demoStatisticsApi,
-    diagnosticsApi: demoDiagnosticsApi,
-    flowExportApi: demoFlowExportApi,
-    // Keep these as stubs that return demo data
-    refreshApi: {
-      refresh: async () => ({ status: 'success', message: 'Demo mode', bridges_count: 2, mirrors_count: 1, vms_count: 5 }),
-    },
-    cacheApi: {
-      refreshBridges: async () => ({ status: 'success', message: 'Demo mode', count: 2 }),
-      refreshMirrors: async () => ({ status: 'success', message: 'Demo mode', count: 1 }),
-      refreshVMs: async () => ({ status: 'success', message: 'Demo mode', count: 5 }),
-      refreshContainers: async () => ({ status: 'success', message: 'Demo mode', count: 2 }),
-      invalidate: async () => ({ status: 'success', message: 'Demo mode', deleted: true }),
-    },
-    portMappingsApi: {
-      get: async () => ({ host_id: 'proxmox-demo', hostname: '10.0.1.100', last_updated: new Date().toISOString(), ports: [] }),
-      refresh: async () => ({ host_id: 'proxmox-demo', hostname: '10.0.1.100', last_updated: new Date().toISOString(), ports: [] }),
-    },
-    vmNetworkApi: {
-      addVMNetworkDevice: async () => { throw new Error('Cannot modify VMs in demo mode'); },
-      removeVMNetworkDevice: async () => { throw new Error('Cannot modify VMs in demo mode'); },
-      addContainerNetworkDevice: async () => { throw new Error('Cannot modify containers in demo mode'); },
-      removeContainerNetworkDevice: async () => { throw new Error('Cannot modify containers in demo mode'); },
-    },
-  });
-}
+const demoCacheApi = {
+  refreshBridges: async () => ({ status: 'success', message: 'Demo mode', count: 2 }),
+  refreshMirrors: async () => ({ status: 'success', message: 'Demo mode', count: 1 }),
+  refreshVMs: async () => ({ status: 'success', message: 'Demo mode', count: 5 }),
+  refreshContainers: async () => ({ status: 'success', message: 'Demo mode', count: 2 }),
+  invalidate: async () => ({ status: 'success', message: 'Demo mode', deleted: true }),
+};
+
+const demoPortMappingsApi = {
+  get: async () => ({ host_id: 'proxmox-demo', hostname: '10.0.1.100', last_updated: new Date().toISOString(), ports: [] }),
+  refresh: async () => ({ host_id: 'proxmox-demo', hostname: '10.0.1.100', last_updated: new Date().toISOString(), ports: [] }),
+};
+
+const demoVmNetworkApi = {
+  addVMNetworkDevice: async () => { throw new Error('Cannot modify VMs in demo mode'); },
+  removeVMNetworkDevice: async () => { throw new Error('Cannot modify VMs in demo mode'); },
+  addContainerNetworkDevice: async () => { throw new Error('Cannot modify containers in demo mode'); },
+  removeContainerNetworkDevice: async () => { throw new Error('Cannot modify containers in demo mode'); },
+};
+
+// Export the appropriate APIs based on demo mode - use ternary to select at build time
+const exportedHostsApi = IS_DEMO_MODE ? demoApis.demoHostsApi : hostsApi;
+const exportedBridgesApi = IS_DEMO_MODE ? demoApis.demoBridgesApi : bridgesApi;
+const exportedMirrorsApi = IS_DEMO_MODE ? demoApis.demoMirrorsApi : mirrorsApi;
+const exportedVmsApi = IS_DEMO_MODE ? demoApis.demoVmsApi : vmsApi;
+const exportedContainersApi = IS_DEMO_MODE ? demoApis.demoContainersApi : containersApi;
+const exportedStatisticsApi = IS_DEMO_MODE ? demoApis.demoStatisticsApi : statisticsApi;
+const exportedDiagnosticsApi = IS_DEMO_MODE ? demoApis.demoDiagnosticsApi : diagnosticsApi;
+const exportedFlowExportApi = IS_DEMO_MODE ? demoApis.demoFlowExportApi : flowExportApi;
+const exportedRefreshApi = IS_DEMO_MODE ? demoRefreshApi : refreshApi;
+const exportedCacheApi = IS_DEMO_MODE ? demoCacheApi : cacheApi;
+const exportedPortMappingsApi = IS_DEMO_MODE ? demoPortMappingsApi : portMappingsApi;
+const exportedPortsApi = IS_DEMO_MODE ? { ...portsApi } : portsApi;
+const exportedVmNetworkApi = IS_DEMO_MODE ? demoVmNetworkApi : vmNetworkApi;
+
+// Export with original API names
+export {
+  exportedHostsApi as hostsApi,
+  exportedBridgesApi as bridgesApi,
+  exportedMirrorsApi as mirrorsApi,
+  exportedVmsApi as vmsApi,
+  exportedContainersApi as containersApi,
+  exportedStatisticsApi as statisticsApi,
+  exportedDiagnosticsApi as diagnosticsApi,
+  exportedFlowExportApi as flowExportApi,
+  exportedRefreshApi as refreshApi,
+  exportedCacheApi as cacheApi,
+  exportedPortMappingsApi as portMappingsApi,
+  exportedPortsApi as portsApi,
+  exportedVmNetworkApi as vmNetworkApi,
+};
