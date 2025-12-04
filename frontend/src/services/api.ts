@@ -1,6 +1,9 @@
 import axios from 'axios';
 import { Host, HostStatus, Bridge, BridgeDetail, Mirror, VM, Container } from '../types';
 
+// Demo mode check
+const IS_DEMO_MODE = process.env.REACT_APP_DEMO_MODE === 'true';
+
 // Dynamically determine API URL based on current origin
 // If accessing from host IP, use host IP for backend too
 // If accessing from localhost, use localhost for backend
@@ -577,3 +580,52 @@ export const vmNetworkApi = {
     return response.data;
   },
 };
+
+// Demo mode wrapper - conditionally export demo APIs if in demo mode
+if (IS_DEMO_MODE) {
+  const {
+    demoHostsApi,
+    demoBridgesApi,
+    demoMirrorsApi,
+    demoVmsApi,
+    demoContainersApi,
+    demoPortsApi,
+    demoStatisticsApi,
+    demoDiagnosticsApi,
+    demoFlowExportApi,
+  } = require('../demo/demoApi');
+
+  // Override exports with demo APIs
+  Object.assign(module.exports, {
+    hostsApi: demoHostsApi,
+    bridgesApi: demoBridgesApi,
+    mirrorsApi: demoMirrorsApi,
+    vmsApi: demoVmsApi,
+    containersApi: demoContainersApi,
+    portsApi: { ...portsApi, ...demoPortsApi },
+    statisticsApi: demoStatisticsApi,
+    diagnosticsApi: demoDiagnosticsApi,
+    flowExportApi: demoFlowExportApi,
+    // Keep these as stubs that return demo data
+    refreshApi: {
+      refresh: async () => ({ status: 'success', message: 'Demo mode', bridges_count: 2, mirrors_count: 1, vms_count: 5 }),
+    },
+    cacheApi: {
+      refreshBridges: async () => ({ status: 'success', message: 'Demo mode', count: 2 }),
+      refreshMirrors: async () => ({ status: 'success', message: 'Demo mode', count: 1 }),
+      refreshVMs: async () => ({ status: 'success', message: 'Demo mode', count: 5 }),
+      refreshContainers: async () => ({ status: 'success', message: 'Demo mode', count: 2 }),
+      invalidate: async () => ({ status: 'success', message: 'Demo mode', deleted: true }),
+    },
+    portMappingsApi: {
+      get: async () => ({ host_id: 'proxmox-demo', hostname: '10.0.1.100', last_updated: new Date().toISOString(), ports: [] }),
+      refresh: async () => ({ host_id: 'proxmox-demo', hostname: '10.0.1.100', last_updated: new Date().toISOString(), ports: [] }),
+    },
+    vmNetworkApi: {
+      addVMNetworkDevice: async () => { throw new Error('Cannot modify VMs in demo mode'); },
+      removeVMNetworkDevice: async () => { throw new Error('Cannot modify VMs in demo mode'); },
+      addContainerNetworkDevice: async () => { throw new Error('Cannot modify containers in demo mode'); },
+      removeContainerNetworkDevice: async () => { throw new Error('Cannot modify containers in demo mode'); },
+    },
+  });
+}

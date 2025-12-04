@@ -1,0 +1,228 @@
+{
+  "hosts": [
+    {
+      "name": "proxmox-demo",
+      "hostname": "10.0.1.100",
+      "port": 22,
+      "username": "root",
+      "description": "Demo Proxmox Host"
+    }
+  ],
+  "bridges": {
+    "proxmox-demo": [
+      {
+        "uuid": "b1a2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d",
+        "name": "ovsbr0",
+        "cidr": "10.10.10.0/24",
+        "fail_mode": "standalone",
+        "datapath_type": "system",
+        "stp_enable": false,
+        "rstp_enable": false,
+        "mcast_snooping_enable": true,
+        "ports": [
+          {
+            "uuid": "p1a2b3c4-d5e6-4f5a-8b9c-0d1e2f3a4b5c",
+            "name": "tap100i0",
+            "bridge": "ovsbr0",
+            "type": "tap",
+            "interfaces": [{"name": "tap100i0", "type": "tap"}]
+          },
+          {
+            "uuid": "p2b3c4d5-e6f7-4a5b-8c9d-0e1f2a3b4c5d",
+            "name": "tap101i0",
+            "bridge": "ovsbr0",
+            "type": "tap",
+            "tag": 100,
+            "vlan_mode": "access",
+            "interfaces": [{"name": "tap101i0", "type": "tap"}]
+          },
+          {
+            "uuid": "p3c4d5e6-f7a8-4b5c-8d9e-0f1a2b3c4d5e",
+            "name": "veth102i0",
+            "bridge": "ovsbr0",
+            "type": "veth",
+            "interfaces": [{"name": "veth102i0", "type": "veth"}]
+          },
+          {
+            "uuid": "p4d5e6f7-a8b9-4c5d-8e9f-0a1b2c3d4e5f",
+            "name": "eth0",
+            "bridge": "ovsbr0",
+            "type": "system",
+            "interfaces": [{"name": "eth0", "type": "system"}]
+          }
+        ],
+        "mirrors": [
+          {
+            "uuid": "m1a2b3c4-d5e6-4f5a-8b9c-0d1e2f3a4b5c",
+            "name": "monitor-traffic",
+            "bridge": "ovsbr0",
+            "select_src_port": ["tap100i0"],
+            "select_dst_port": ["tap100i0"],
+            "output_port": "tap103i0",
+            "select_all": false
+          }
+        ]
+      },
+      {
+        "uuid": "b2b3c4d5-e6f7-4a5b-8c9d-0e1f2a3b4c5d",
+        "name": "ovsbr1",
+        "cidr": "10.20.20.0/24",
+        "fail_mode": "standalone",
+        "datapath_type": "system",
+        "stp_enable": false,
+        "rstp_enable": false,
+        "mcast_snooping_enable": false,
+        "ports": [
+          {
+            "uuid": "p5e6f7a8-b9c0-4d5e-8f9a-0b1c2d3e4f5a",
+            "name": "tap104i0",
+            "bridge": "ovsbr1",
+            "type": "tap",
+            "interfaces": [{"name": "tap104i0", "type": "tap"}]
+          },
+          {
+            "uuid": "p6f7a8b9-c0d1-4e5f-8a9b-0c1d2e3f4a5b",
+            "name": "eth1",
+            "bridge": "ovsbr1",
+            "type": "system",
+            "interfaces": [{"name": "eth1", "type": "system"}]
+          }
+        ],
+        "mirrors": []
+      }
+    ]
+  },
+  "vms": {
+    "proxmox-demo": [
+      {
+        "vmid": 100,
+        "name": "web-server",
+        "status": "running",
+        "interfaces": [
+          {
+            "netid": "net0",
+            "tap": "tap100i0",
+            "mac": "BC:24:11:1A:33:AB",
+            "bridge": "ovsbr0"
+          }
+        ]
+      },
+      {
+        "vmid": 101,
+        "name": "database-server",
+        "status": "running",
+        "interfaces": [
+          {
+            "netid": "net0",
+            "tap": "tap101i0",
+            "mac": "BC:24:11:2B:44:CD",
+            "bridge": "ovsbr0"
+          }
+        ]
+      },
+      {
+        "vmid": 103,
+        "name": "monitor-vm",
+        "status": "running",
+        "interfaces": [
+          {
+            "netid": "net0",
+            "tap": "tap103i0",
+            "mac": "BC:24:11:3C:55:EF",
+            "bridge": "ovsbr0"
+          }
+        ]
+      },
+      {
+        "vmid": 104,
+        "name": "app-server",
+        "status": "running",
+        "interfaces": [
+          {
+            "netid": "net0",
+            "tap": "tap104i0",
+            "mac": "BC:24:11:4D:66:AB",
+            "bridge": "ovsbr1"
+          }
+        ]
+      },
+      {
+        "vmid": 105,
+        "name": "backup-vm",
+        "status": "stopped",
+        "interfaces": [
+          {
+            "netid": "net0",
+            "tap": "",
+            "mac": "BC:24:11:5E:77:BC",
+            "bridge": "ovsbr0"
+          }
+        ]
+      }
+    ]
+  },
+  "containers": {
+    "proxmox-demo": [
+      {
+        "ctid": 102,
+        "name": "web-container",
+        "status": "running",
+        "interfaces": [
+          {
+            "netid": "net0",
+            "tap": "veth102i0",
+            "mac": "AA:BB:CC:DD:EE:01",
+            "bridge": "ovsbr0"
+          }
+        ]
+      },
+      {
+        "ctid": 106,
+        "name": "test-container",
+        "status": "stopped",
+        "interfaces": [
+          {
+            "netid": "net0",
+            "tap": "",
+            "mac": "AA:BB:CC:DD:EE:02",
+            "bridge": "ovsbr1"
+          }
+        ]
+      }
+    ]
+  },
+  "statistics": {
+    "proxmox-demo": {
+      "tap100i0": {
+        "rx_packets": 125430,
+        "rx_bytes": 89234567,
+        "rx_dropped": 12,
+        "rx_errors": 0,
+        "tx_packets": 98234,
+        "tx_bytes": 67123456,
+        "tx_dropped": 5,
+        "tx_errors": 0
+      },
+      "tap101i0": {
+        "rx_packets": 234567,
+        "rx_bytes": 178923456,
+        "rx_dropped": 8,
+        "rx_errors": 1,
+        "tx_packets": 187654,
+        "tx_bytes": 145678912,
+        "tx_dropped": 3,
+        "tx_errors": 0
+      },
+      "veth102i0": {
+        "rx_packets": 45678,
+        "rx_bytes": 23456789,
+        "rx_dropped": 2,
+        "rx_errors": 0,
+        "tx_packets": 34567,
+        "tx_bytes": 18901234,
+        "tx_dropped": 1,
+        "tx_errors": 0
+      }
+    }
+  }
+}

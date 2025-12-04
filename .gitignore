@@ -53,3 +53,5 @@ debug_*.sh
 *test*.log
 *.log
 
+frontend/package-lock.json
+frontend/build/

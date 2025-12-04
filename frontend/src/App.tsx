@@ -11,10 +11,12 @@ import MirrorManagement from './components/MirrorManagement';
 import FlowExportConfig from './components/FlowExportConfig';
 import NetworkTopology from './components/NetworkTopology';
 import Diagnostics from './components/Diagnostics';
+import DemoBanner from './components/DemoBanner';
 
 function App() {
   return (
     <ThemeProvider>
+      <DemoBanner />
       <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <Layout>
           <Routes>

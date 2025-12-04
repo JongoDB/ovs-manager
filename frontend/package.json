@@ -28,6 +28,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build:demo": "REACT_APP_DEMO_MODE=true react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
