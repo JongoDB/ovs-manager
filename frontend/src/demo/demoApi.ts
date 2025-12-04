@@ -79,6 +79,16 @@ export const demoBridgesApi = {
     await delay();
     throw new Error('Cannot delete bridges in demo mode');
   },
+
+  flushFdb: async (): Promise<any> => {
+    await delay();
+    throw new Error('Cannot flush FDB in demo mode');
+  },
+
+  clearMirrors: async (): Promise<any> => {
+    await delay();
+    throw new Error('Cannot clear mirrors in demo mode');
+  },
 };
 
 export const demoMirrorsApi = {
@@ -93,9 +103,24 @@ export const demoMirrorsApi = {
     throw new Error('Cannot create mirrors in demo mode');
   },
 
+  clearBridgeMirrors: async (): Promise<any> => {
+    await delay();
+    throw new Error('Cannot clear bridge mirrors in demo mode');
+  },
+
+  getStatistics: async (): Promise<any> => {
+    await delay();
+    return {};
+  },
+
   delete: async (): Promise<any> => {
     await delay();
     throw new Error('Cannot delete mirrors in demo mode');
+  },
+
+  testMirror: async (): Promise<any> => {
+    await delay();
+    return { status: 'success', message: 'Demo mode: mirror test not available' };
   },
 };
 
@@ -188,7 +213,7 @@ export const demoStatisticsApi = {
   getInterface: async (hostId: string, interfaceName: string): Promise<any> => {
     await delay();
     const stats = mockData.statistics[hostId as keyof typeof mockData.statistics] || {};
-    return stats[interfaceName] || {};
+    return (stats as Record<string, any>)[interfaceName] || {};
   },
 
   getDelta: async (hostId: string): Promise<any> => {
@@ -204,29 +229,115 @@ export const demoStatisticsApi = {
 };
 
 export const demoDiagnosticsApi = {
-  execute: async (): Promise<any> => {
+  getOvsTopology: async (): Promise<any> => {
     await delay();
-    return {
-      stdout: 'Demo mode: Diagnostic commands are not available',
-      stderr: '',
-      exit_code: 0
-    };
+    return { success: true, output: 'Demo mode: OVS topology not available' };
+  },
+
+  getOpenFlowPorts: async (): Promise<any> => {
+    await delay();
+    return { success: true, output: 'Demo mode: OpenFlow ports not available' };
+  },
+
+  getMacTable: async (): Promise<any> => {
+    await delay();
+    return { success: true, output: 'Demo mode: MAC table not available' };
+  },
+
+  getFlows: async (): Promise<any> => {
+    await delay();
+    return { success: true, output: 'Demo mode: Flows not available' };
+  },
+
+  tracePacket: async (): Promise<any> => {
+    await delay();
+    return { success: true, output: 'Demo mode: Packet trace not available' };
+  },
+
+  getPortStats: async (): Promise<any> => {
+    await delay();
+    return { success: true, output: 'Demo mode: Port stats not available' };
+  },
+
+  getInterfaceStats: async (): Promise<any> => {
+    await delay();
+    return { success: true, output: 'Demo mode: Interface stats not available' };
+  },
+
+  getInterfacesWithIps: async (): Promise<any> => {
+    await delay();
+    return { success: true, output: 'Demo mode: Interfaces with IPs not available' };
+  },
+
+  ping: async (): Promise<any> => {
+    await delay();
+    return { success: true, output: 'Demo mode: Ping not available' };
+  },
+
+  getArpTable: async (): Promise<any> => {
+    await delay();
+    return { success: true, output: 'Demo mode: ARP table not available' };
+  },
+
+  getInterfaceConfig: async (): Promise<any> => {
+    await delay();
+    return { success: true, output: 'Demo mode: Interface config not available' };
+  },
+
+  getDatapathFlows: async (): Promise<any> => {
+    await delay();
+    return { success: true, output: 'Demo mode: Datapath flows not available' };
+  },
+
+  getBridgeProtocols: async (): Promise<any> => {
+    await delay();
+    return { success: true, output: 'Demo mode: Bridge protocols not available' };
+  },
+
+  getConnectivityMatrix: async (): Promise<any> => {
+    await delay();
+    return { success: true, matrix: [] };
+  },
+
+  executeOvsVsctl: async (): Promise<any> => {
+    await delay();
+    return { success: true, output: 'Demo mode: ovs-vsctl not available' };
+  },
+
+  executeOvsOfctl: async (): Promise<any> => {
+    await delay();
+    return { success: true, output: 'Demo mode: ovs-ofctl not available' };
   },
 };
 
 export const demoFlowExportApi = {
-  list: async (): Promise<any[]> => {
+  configureNetflow: async (): Promise<any> => {
     await delay();
-    return [];
+    throw new Error('Cannot configure NetFlow in demo mode');
   },
 
-  create: async (): Promise<any> => {
+  getNetflowConfig: async (): Promise<any> => {
     await delay();
-    throw new Error('Cannot create flow exports in demo mode');
+    return {};
   },
 
-  delete: async (): Promise<any> => {
+  disableNetflow: async (): Promise<any> => {
     await delay();
-    throw new Error('Cannot delete flow exports in demo mode');
+    throw new Error('Cannot disable NetFlow in demo mode');
+  },
+
+  configureSflow: async (): Promise<any> => {
+    await delay();
+    throw new Error('Cannot configure sFlow in demo mode');
+  },
+
+  getSflowConfig: async (): Promise<any> => {
+    await delay();
+    return {};
+  },
+
+  disableSflow: async (): Promise<any> => {
+    await delay();
+    throw new Error('Cannot disable sFlow in demo mode');
   },
 };

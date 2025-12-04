@@ -116,7 +116,7 @@ const StatisticsDashboard: React.FC = () => {
       setDeltaStats(delta);
 
       // Transform data for charts
-      const data: InterfaceData[] = Object.entries(delta)
+      const data: InterfaceData[] = (Object.entries(delta) as [string, StatsDelta][])
         .filter(([_, stats]) => stats.rx_bps > 0 || stats.tx_bps > 0)
         .map(([name, stats]) => {
           const vmInfo = getPortVMInfo(name, vms, portMapping);

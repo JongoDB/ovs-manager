@@ -26,7 +26,8 @@ FROM base AS builder
 # Copy application code
 COPY . .
 
-# Build the application
+# Build the application (CI=false to not treat warnings as errors)
+ENV CI=false
 RUN npm run build
 
 # Production stage - serve with lightweight server
