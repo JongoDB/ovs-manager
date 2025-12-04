@@ -98,7 +98,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         ))}
       </List>
       <Box sx={{ p: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-        <img src={logo} alt="OVS Manager Logo" style={{ width: 24, height: 24 }} />
+        <img src={logo} alt="OVS Manager Logo" style={{ height: 24, width: 'auto' }} />
         <Typography variant="caption" color="text.secondary">
           v{APP_VERSION}
         </Typography>
