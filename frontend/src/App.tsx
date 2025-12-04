@@ -17,7 +17,7 @@ function App() {
   return (
     <ThemeProvider>
       <DemoBanner />
-      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <Router basename={process.env.PUBLIC_URL} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <Layout>
           <Routes>
             <Route path="/" element={<Dashboard />} />

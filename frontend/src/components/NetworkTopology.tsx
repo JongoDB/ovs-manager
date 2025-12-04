@@ -368,23 +368,25 @@ const NetworkTopology: React.FC = () => {
                 animated: true,
                 label: mirror.select_all ? `Mirror All: ${mirror.name || 'Unnamed'}` : `Mirror: ${mirror.name || 'Unnamed'}`,
                 style: {
-                  stroke: '#dc004e',
-                  strokeWidth: 3,
+                  stroke: '#e91e63',
+                  strokeWidth: 4,
                   strokeDasharray: '10,5',
+                  opacity: 1,
                 },
                 markerEnd: {
                   type: MarkerType.ArrowClosed,
-                  color: '#dc004e',
+                  color: '#e91e63',
                 },
                 labelStyle: {
-                  fill: '#dc004e',
-                  fontWeight: 600,
-                  fontSize: 10,
+                  fill: '#e91e63',
+                  fontWeight: 700,
+                  fontSize: 11,
                 },
                 labelBgStyle: {
                   fill: 'white',
-                  fillOpacity: 0.8,
+                  fillOpacity: 0.95,
                 },
+                zIndex: 1000,
               });
             });
           }
@@ -431,7 +433,7 @@ const NetworkTopology: React.FC = () => {
             vm.interfaces.forEach((iface) => {
               // Connect to whichever bridge this interface is configured for
               newEdges.push({
-                id: `edge-stopped-${iface.tap}`,
+                id: `edge-stopped-vm-${vm.vmid}-${iface.netid}`,
                 source: `vm-${vm.vmid}`,
                 sourceHandle: iface.tap,
                 target: `bridge-${iface.bridge}`,
@@ -492,7 +494,7 @@ const NetworkTopology: React.FC = () => {
             ct.interfaces.forEach((iface) => {
               // Connect to whichever bridge this interface is configured for
               newEdges.push({
-                id: `edge-stopped-${iface.tap}`,
+                id: `edge-stopped-ct-${ct.ctid}-${iface.netid}`,
                 source: `ct-${ct.ctid}`,
                 sourceHandle: iface.tap,
                 target: `bridge-${iface.bridge}`,

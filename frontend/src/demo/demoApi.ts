@@ -139,6 +139,39 @@ export const demoPortsApi = {
     const bridges = mockData.bridges[hostId as keyof typeof mockData.bridges] || [];
     return bridges.flatMap(b => b.ports);
   },
+
+  create: async (): Promise<any> => {
+    await delay();
+    throw new Error('Cannot create ports in demo mode');
+  },
+
+  get: async (hostId: string, portName: string): Promise<any> => {
+    await delay();
+    const bridges = mockData.bridges[hostId as keyof typeof mockData.bridges] || [];
+    const port = bridges.flatMap(b => b.ports).find(p => p.name === portName);
+    if (!port) throw new Error('Port not found');
+    return port;
+  },
+
+  update: async (): Promise<any> => {
+    await delay();
+    throw new Error('Cannot update ports in demo mode');
+  },
+
+  delete: async (): Promise<any> => {
+    await delay();
+    throw new Error('Cannot delete ports in demo mode');
+  },
+
+  setVlan: async (): Promise<any> => {
+    await delay();
+    throw new Error('Cannot set VLAN in demo mode');
+  },
+
+  listAvailable: async (): Promise<string[]> => {
+    await delay();
+    return [];
+  },
 };
 
 export const demoStatisticsApi = {
